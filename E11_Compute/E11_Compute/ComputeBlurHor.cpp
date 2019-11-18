@@ -57,7 +57,7 @@ void ComputeBlurHor::setShaderParameters(ID3D11DeviceContext* dc, ID3D11ShaderRe
 	dc->CSSetUnorderedAccessViews(0, 1, &m_uavAccess, 0);
 }
 
-void ComputeBlurHor::copy(ID3D11DeviceContext* dc)
+void ComputeBlurHor::unbind(ID3D11DeviceContext* dc)
 {
 	ID3D11ShaderResourceView* nullSRV[] = { NULL };
 	dc->CSSetShaderResources(0, 1, nullSRV);

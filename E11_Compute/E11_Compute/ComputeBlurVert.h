@@ -14,7 +14,7 @@ public:
 	void setShaderParameters(ID3D11DeviceContext* dc, ID3D11ShaderResourceView* texture1);
 	void createOutputUAV();
 	ID3D11ShaderResourceView* getSRV() { return m_srvTexOutput; };
-	void copy(ID3D11DeviceContext* dc);
+	void unbind(ID3D11DeviceContext* dc);
 
 
 private:
