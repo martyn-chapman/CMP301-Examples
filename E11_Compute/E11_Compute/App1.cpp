@@ -144,12 +144,12 @@ void App1::computePass()
 {
 	// horiontal pass using unblurred copy of the scene
 	horBlur->setShaderParameters(renderer->getDeviceContext(), unblurredRT->getShaderResourceView());
-	horBlur->compute(renderer->getDeviceContext(), sWidth / 296.f, sHeight, 1);
+	horBlur->compute(renderer->getDeviceContext(), sWidth / 256.f, sHeight, 1);
 	horBlur->copy(renderer->getDeviceContext());
 
 	// Vertical blur using the horizontal blur result
 	vertBlur->setShaderParameters(renderer->getDeviceContext(), horBlur->getSRV());
-	vertBlur->compute(renderer->getDeviceContext(), sWidth, ceil((float)sHeight / 296.f), 1);
+	vertBlur->compute(renderer->getDeviceContext(), sWidth, ceil((float)sHeight / 256.f), 1);
 	vertBlur->copy(renderer->getDeviceContext());
 }
 

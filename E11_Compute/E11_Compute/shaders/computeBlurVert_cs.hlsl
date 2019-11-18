@@ -18,7 +18,7 @@ cbuffer cbFixed
 Texture2D gInput : register(t0);
 RWTexture2D<float4> gOutput : register(u0);
 
-#define N 296
+#define N 256
 #define CacheSize (N + 2*gBlurRadius)
 groupshared float4 gCache[CacheSize];
 
