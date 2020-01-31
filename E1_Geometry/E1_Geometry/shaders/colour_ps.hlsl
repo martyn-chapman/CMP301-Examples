@@ -10,5 +10,6 @@ struct InputType
 
 float4 main(InputType input) : SV_TARGET
 {
+	//input.colour = float4(1.0f, 0.0f, 0.0f, 1.0f);
 	return input.colour;
 }

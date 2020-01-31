@@ -33,6 +33,8 @@ OutputType main(InputType input)
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
 
+	//output.position = float4(output.position.x * 2.0f, output.position.y * 2.0f, output.position.z, output.position.w);
+
 	output.colour = input.colour;
 
 	return output;

@@ -74,7 +74,3 @@ void ColourShader::setShaderParameters(ID3D11DeviceContext* deviceContext, const
 	// Now set the constant buffer in the vertex shader with the updated values.
 	deviceContext->VSSetConstantBuffers(0, 1, &matrixBuffer);
 }
-
-
-
-

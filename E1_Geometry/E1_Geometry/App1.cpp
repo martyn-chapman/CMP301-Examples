@@ -33,6 +33,12 @@ App1::~App1()
 		delete mesh;
 		mesh = 0;
 	}
+	if (mesh2)
+	{
+		delete mesh2;
+		mesh2 = 0;
+	}
+
 
 	if (colourShader)
 	{
@@ -79,6 +85,10 @@ bool App1::render()
 	mesh2->sendData(renderer->getDeviceContext());
 	colourShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix);
 	colourShader->render(renderer->getDeviceContext(), mesh2->getIndexCount());
+
+	//mesh->sendData(renderer->getDeviceContext());
+	//colourShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix);
+	//colourShader->render(renderer->getDeviceContext(), mesh->getIndexCount());
 
 	// Render GUI
 	gui();
