@@ -26,17 +26,29 @@ void TexturedQuad::initBuffers(ID3D11Device* device)
 	unsigned long* indices = new unsigned long[indexCount];
 
 	// Load the vertex array with data.
+	//vertices[0].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // Top left.
+	//vertices[0].texture = XMFLOAT2(0.0f, 0.0f);
+
+	//vertices[1].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // bottom left.
+	//vertices[1].texture = XMFLOAT2(0.0f, 1.0f);
+
+	//vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // bottom right.
+	//vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
+
+	//vertices[3].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // top right.
+	//vertices[3].texture = XMFLOAT2(1.0f, 0.0f);
+
 	vertices[0].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // Top left.
 	vertices[0].texture = XMFLOAT2(0.0f, 0.0f);
 
 	vertices[1].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // bottom left.
-	vertices[1].texture = XMFLOAT2(0.0f, 1.0f);
+	vertices[1].texture = XMFLOAT2(0.0f, 2.0f);
 
 	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // bottom right.
-	vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
+	vertices[2].texture = XMFLOAT2(2.0f, 2.0f);
 
 	vertices[3].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // top right.
-	vertices[3].texture = XMFLOAT2(1.0f, 0.0f);
+	vertices[3].texture = XMFLOAT2(2.0f, 0.0f);
 
 	// Load the index array with data.
 	indices[0] = 0;  // Top left

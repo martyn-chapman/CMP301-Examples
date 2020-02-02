@@ -58,8 +58,8 @@ void TextureShader::initShader(const wchar_t* vsFilename, const wchar_t* psFilen
 
 	// Create a texture sampler state description.
 	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 	samplerDesc.MipLODBias = 0.0f;
 	samplerDesc.MaxAnisotropy = 1;
@@ -69,7 +69,6 @@ void TextureShader::initShader(const wchar_t* vsFilename, const wchar_t* psFilen
 
 	// Create the texture sampler state.
 	renderer->CreateSamplerState(&samplerDesc, &sampleState);
-
 }
 
 
@@ -99,8 +98,3 @@ void TextureShader::setShaderParameters(ID3D11DeviceContext* deviceContext, cons
 	deviceContext->PSSetShaderResources(0, 1, &texture);
 	deviceContext->PSSetSamplers(0, 1, &sampleState);
 }
-
-
-
-
-

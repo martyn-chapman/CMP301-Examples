@@ -13,7 +13,8 @@ void App1::init(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeigh
 	// Call super/parent init function (required!)
 	BaseApplication::init(hinstance, hwnd, screenWidth, screenHeight, in, VSYNC, FULL_SCREEN);
 
-	textureMgr->loadTexture(L"brick", L"res/brick1.dds");
+	//textureMgr->loadTexture(L"brick", L"res/brick1.dds");
+	textureMgr->loadTexture(L"mytexture", L"res/limmychin.png");
 
 	// Create Mesh object and shader object
 	mesh = new TexturedQuad(renderer->getDevice(), renderer->getDeviceContext());
@@ -79,7 +80,8 @@ bool App1::render()
 
 	// Send geometry data, set shader parameters, render object with shader
 	mesh->sendData(renderer->getDeviceContext());
-	textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"));
+	//textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"));
+	textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"mytexture"));
 	textureShader->render(renderer->getDeviceContext(), mesh->getIndexCount());
 
 	// Render GUI
