@@ -24,6 +24,10 @@ protected:
 private:
 	TextureShader* textureShader;
 	TexturedQuad* mesh;
+	TexturedQuad* mesh2;
+
+	float mesh1rotation;
+	float mesh2rotation;
 };
 
 #endif

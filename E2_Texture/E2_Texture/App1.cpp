@@ -15,11 +15,15 @@ void App1::init(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeigh
 
 	//textureMgr->loadTexture(L"brick", L"res/brick1.dds");
 	textureMgr->loadTexture(L"mytexture", L"res/limmychin.png");
+	textureMgr->loadTexture(L"mysecondtexture", L"res/limmybed.png");
 
 	// Create Mesh object and shader object
 	mesh = new TexturedQuad(renderer->getDevice(), renderer->getDeviceContext());
+	mesh2 = new TexturedQuad(renderer->getDevice(), renderer->getDeviceContext());
 	textureShader = new TextureShader(renderer->getDevice(), hwnd);
 
+	mesh1rotation = 0.0f;
+	mesh2rotation = 0.0f;
 }
 
 
@@ -33,6 +37,11 @@ App1::~App1()
 	{
 		delete mesh;
 		mesh = 0;
+	}
+	if (mesh2)
+	{
+		delete mesh2;
+		mesh2 = 0;
 	}
 
 	if (textureShader)
@@ -60,6 +69,12 @@ bool App1::frame()
 		return false;
 	}
 
+	// 6.28f is approx 2pi
+	if (mesh1rotation < 6.28f)
+		mesh1rotation += 0.1f;
+	else
+		mesh1rotation = 0.0f;
+
 	return true;
 }
 
@@ -78,11 +93,25 @@ bool App1::render()
 	viewMatrix = camera->getViewMatrix();
 	projectionMatrix = renderer->getProjectionMatrix();
 
+
+	// Rotate the world matrix
+	worldMatrix = XMMatrixRotationZ(mesh1rotation);
+
 	// Send geometry data, set shader parameters, render object with shader
 	mesh->sendData(renderer->getDeviceContext());
 	//textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"));
 	textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"mytexture"));
 	textureShader->render(renderer->getDeviceContext(), mesh->getIndexCount());
+
+	// Translate the world matrix
+	//worldMatrix = XMMatrixTranslation(4.0f, 0.0f, 0.0f);
+	XMMATRIX translation = XMMatrixTranslation(4.0f, 0.0f, 0.0f);
+	XMMATRIX rotation = XMMatrixRotationZ(mesh2rotation);
+	worldMatrix = XMMatrixMultiply(rotation, translation);
+
+	mesh2->sendData(renderer->getDeviceContext());
+	textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"mysecondtexture"));
+	textureShader->render(renderer->getDeviceContext(), mesh2->getIndexCount());
 
 	// Render GUI
 	gui();
@@ -103,6 +132,7 @@ void App1::gui()
 	// Build UI
 	ImGui::Text("FPS: %.2f", timer->getFPS());
 	ImGui::Checkbox("Wireframe mode", &wireframeToggle);
+	ImGui::SliderFloat("Z Rotation: mesh2", &mesh2rotation, 0.0f, 6.28f);
 
 	// Render UI
 	ImGui::Render();
