@@ -20,6 +20,7 @@ void App1::init(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeigh
 	// Create Mesh object and shader object
 	mesh = new TexturedQuad(renderer->getDevice(), renderer->getDeviceContext());
 	mesh2 = new TexturedQuad(renderer->getDevice(), renderer->getDeviceContext());
+	blendmesh = new TexturedQuad(renderer->getDevice(), renderer->getDeviceContext());
 	textureShader = new TextureShader(renderer->getDevice(), hwnd);
 
 	mesh1rotation = 0.0f;
@@ -42,6 +43,11 @@ App1::~App1()
 	{
 		delete mesh2;
 		mesh2 = 0;
+	}
+	if (blendmesh)
+	{
+		delete blendmesh;
+		blendmesh = 0;
 	}
 
 	if (textureShader)
@@ -96,19 +102,24 @@ bool App1::render()
 
 	// Rotate the world matrix
 	worldMatrix = XMMatrixRotationZ(mesh1rotation);
-
 	// Send geometry data, set shader parameters, render object with shader
 	mesh->sendData(renderer->getDeviceContext());
-	//textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"));
 	textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"mytexture"));
 	textureShader->render(renderer->getDeviceContext(), mesh->getIndexCount());
 
 	// Translate the world matrix
-	//worldMatrix = XMMatrixTranslation(4.0f, 0.0f, 0.0f);
-	XMMATRIX translation = XMMatrixTranslation(4.0f, 0.0f, 0.0f);
-	XMMATRIX rotation = XMMatrixRotationZ(mesh2rotation);
-	worldMatrix = XMMatrixMultiply(rotation, translation);
+	worldMatrix = XMMatrixTranslation(3.0f, 0.0f, 0.0f);
+	// Send geometry data, set shader parameters, render object with shader
+	blendmesh->sendData(renderer->getDeviceContext());
+	textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"mytexture"), textureMgr->getTexture(L"mysecondtexture"));
+	textureShader->renderBlend(renderer->getDeviceContext(), blendmesh->getIndexCount());
 
+
+	// Rotate and translate the world matrix
+	XMMATRIX rotation = XMMatrixRotationZ(mesh2rotation);
+	XMMATRIX translation = XMMatrixTranslation(6.0f, 0.0f, 0.0f);
+	worldMatrix = XMMatrixMultiply(rotation, translation);
+	// Send geometry data, set shader parameters, render object with shader
 	mesh2->sendData(renderer->getDeviceContext());
 	textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"mysecondtexture"));
 	textureShader->render(renderer->getDeviceContext(), mesh2->getIndexCount());

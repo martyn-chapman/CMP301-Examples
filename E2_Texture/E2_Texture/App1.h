@@ -25,6 +25,7 @@ private:
 	TextureShader* textureShader;
 	TexturedQuad* mesh;
 	TexturedQuad* mesh2;
+	TexturedQuad* blendmesh;
 
 	float mesh1rotation;
 	float mesh2rotation;
