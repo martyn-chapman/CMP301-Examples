@@ -19,9 +19,9 @@ void App1::init(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeigh
 	mesh = new SphereMesh(renderer->getDevice(), renderer->getDeviceContext());
 	shader = new LightShader(renderer->getDevice(), hwnd);
 	light = new Light;
-	light->setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
-	light->setDirection(1.0f, 0.0f, 0.0f);
-
+	light->setDiffuseColour(1.0f, 0.9f, 0.85f, 1.0f);
+	light->setAmbientColour(0.2f, 0.0f, 0.0f, 1.0f);
+	light->setDirection(1.0f, -1.0f, 0.0f);
 }
 
 

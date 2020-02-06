@@ -7,6 +7,7 @@ SamplerState sampler0 : register(s0);
 cbuffer LightBuffer : register(b0)
 {
 	float4 diffuseColour;
+	float4 ambientColour;
 	float3 lightDirection;
 	float padding;
 };
@@ -33,9 +34,10 @@ float4 main(InputType input) : SV_TARGET
 
 	// Sample the texture. Calculate light intensity and colour, return light*texture for final pixel colour.
 	textureColour = texture0.Sample(sampler0, input.tex);
-	lightColour = calculateLighting(-lightDirection, input.normal, diffuseColour);
+	lightColour = calculateLighting(-lightDirection, input.normal, diffuseColour) + ambientColour;
 	
 	return lightColour * textureColour;
+	//return lightColour;
 }
 
 
