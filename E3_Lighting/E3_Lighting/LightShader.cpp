@@ -113,7 +113,8 @@ void LightShader::setShaderParameters(ID3D11DeviceContext* deviceContext, const 
 	lightPtr = (LightBufferType*)mappedResource.pData;
 	lightPtr->diffuse = light->getDiffuseColour();
 	lightPtr->ambient = light->getAmbientColour();
-	lightPtr->direction = light->getDirection();
+	//lightPtr->direction = light->getDirection();
+	lightPtr->position = light->getPosition();
 	lightPtr->padding = 0.0f;
 	deviceContext->Unmap(lightBuffer, 0);
 	deviceContext->PSSetConstantBuffers(0, 1, &lightBuffer);

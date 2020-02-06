@@ -12,7 +12,7 @@ private:
 	{
 		XMFLOAT4 diffuse;
 		XMFLOAT4 ambient;
-		XMFLOAT3 direction;
+		XMFLOAT3 position;
 		float padding;
 	};
 

@@ -14,14 +14,17 @@ void App1::init(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeigh
 	BaseApplication::init(hinstance, hwnd, screenWidth, screenHeight, in, VSYNC, FULL_SCREEN);
 
 	textureMgr->loadTexture(L"brick", L"res/brick1.dds");
+	textureMgr->loadTexture(L"check", L"res/DefaultDiffuse.png");
 
 	// Create Mesh object and shader object
 	mesh = new SphereMesh(renderer->getDevice(), renderer->getDeviceContext());
+	planeMesh = new PlaneMesh(renderer->getDevice(), renderer->getDeviceContext(), 100);
 	shader = new LightShader(renderer->getDevice(), hwnd);
 	light = new Light;
 	light->setDiffuseColour(1.0f, 0.9f, 0.85f, 1.0f);
 	light->setAmbientColour(0.2f, 0.0f, 0.0f, 1.0f);
-	light->setDirection(1.0f, -1.0f, 0.0f);
+	light->setPosition(50, 10, 50);
+	//light->setDirection(1.0f, -1.0f, 0.0f);
 }
 
 
@@ -35,6 +38,11 @@ App1::~App1()
 	{
 		delete mesh;
 		mesh = 0;
+	}
+	if (planeMesh)
+	{
+		delete planeMesh;
+		planeMesh = 0;
 	}
 
 	if (shader)
@@ -85,6 +93,14 @@ bool App1::render()
 	shader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"), light);
 	shader->render(renderer->getDeviceContext(), mesh->getIndexCount());
 
+	// Translate the world matrix to move the mesh
+	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
+	// Send geometry data, set shader parameters, render object with shader
+	planeMesh->sendData(renderer->getDeviceContext());
+	shader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"check"), light);
+	shader->render(renderer->getDeviceContext(), planeMesh->getIndexCount());
+
+
 	// Render GUI
 	gui();
 
@@ -104,6 +120,16 @@ void App1::gui()
 	// Build UI
 	ImGui::Text("FPS: %.2f", timer->getFPS());
 	ImGui::Checkbox("Wireframe mode", &wireframeToggle);
+
+	// Control light position
+	float translation[3] = { light->getPosition().x, light->getPosition().y, light->getPosition().z };
+	ImGui::SliderFloat3("Point light pos", translation, 0.0f, 100.0f);
+	light->setPosition(translation[0], translation[1], translation[2]);
+
+	// Control light colour
+	float colour[4] = { light->getDiffuseColour().x, light->getDiffuseColour().y, light->getDiffuseColour().z, light->getDiffuseColour().w };
+	ImGui::ColorEdit3("Point light colour", colour);
+	light->setDiffuseColour(colour[0], colour[1], colour[2], colour[3]);
 
 	// Render UI
 	ImGui::Render();
