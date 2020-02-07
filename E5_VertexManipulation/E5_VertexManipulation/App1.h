@@ -26,6 +26,9 @@ private:
 	PlaneMesh* mesh;
 	Light* light;
 	float timePassed;
+	float amplitude;
+	float frequency;
+	float speed;
 };
 
 #endif

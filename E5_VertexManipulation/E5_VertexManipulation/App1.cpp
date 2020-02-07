@@ -13,7 +13,7 @@ void App1::init(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeigh
 	// Call super/parent init function (required!)
 	BaseApplication::init(hinstance, hwnd, screenWidth, screenHeight, in, VSYNC, FULL_SCREEN);
 
-	textureMgr->loadTexture(L"brick", L"res/brick1.dds");
+	textureMgr->loadTexture(L"heightmap", L"res/height.png");
 
 	// Create Mesh object and shader object
 	mesh = new PlaneMesh(renderer->getDevice(), renderer->getDeviceContext());
@@ -21,7 +21,11 @@ void App1::init(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeigh
 	light = new Light;
 	light->setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
 	light->setDirection(0.7f, -0.7f, 0.0f);
+	
 	timePassed = 0.0f;
+	amplitude = 1.0f;
+	frequency = 1.0f;
+	speed = 1.0f;
 }
 
 
@@ -62,7 +66,9 @@ bool App1::frame()
 		return false;
 	}
 
-	if (timePassed < XM_2PI)
+	float timeCheck = timePassed * speed;
+
+	if (timeCheck < XM_2PI)
 		timePassed += timer->getTime();
 	else
 		timePassed = 0.0f;
@@ -89,7 +95,7 @@ bool App1::render()
 	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
 	// Send geometry data, set shader parameters, render object with shader
 	mesh->sendData(renderer->getDeviceContext());
-	shader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"), light, timePassed);
+	shader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"heightmap"), light, timePassed, amplitude, frequency, speed);
 	shader->render(renderer->getDeviceContext(), mesh->getIndexCount());
 
 	// Render GUI
@@ -112,6 +118,9 @@ void App1::gui()
 	ImGui::Text("FPS: %.2f", timer->getFPS());
 	ImGui::Checkbox("Wireframe mode", &wireframeToggle);
 	ImGui::Text("Time passed: %.2f", timePassed);
+	ImGui::SliderFloat("amplitude: ", &amplitude, -2.0f, 2.0f);
+	ImGui::SliderFloat("frequency: ", &frequency, 0.0f, 2.0f);
+	ImGui::SliderFloat("speed: ", &speed, 0.1f, 10.0f);
 
 	// Render UI
 	ImGui::Render();

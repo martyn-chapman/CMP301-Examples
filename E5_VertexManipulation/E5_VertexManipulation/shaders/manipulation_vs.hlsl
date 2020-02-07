@@ -1,5 +1,9 @@
 // Light vertex shader
 // Standard issue vertex shader, apply matrices, pass info to pixel shader
+
+Texture2D texture0 : register(t0);
+SamplerState sampler0 : register(s0);
+
 cbuffer MatrixBuffer : register(b0)
 {
 	matrix worldMatrix;
@@ -7,10 +11,12 @@ cbuffer MatrixBuffer : register(b0)
 	matrix projectionMatrix;
 };
 
-cbuffer TimeBuffer : register(b1)
+cbuffer WaveBuffer : register(b1)
 {
 	float time;
-	float3 padding;
+	float amplitude;
+	float frequency;
+	float speed;
 }
 
 struct InputType
@@ -31,12 +37,20 @@ OutputType main(InputType input)
 {
 	OutputType output;
 
+	// WAVE
 	// offset y
-	input.position.y = sin(input.position.x + time) * 0.5f;
+	//input.position.y = sin((input.position.x + (time * speed)) * frequency) * amplitude;
 
 	// normals
-	input.normal.x = 1 - cos(input.position.x + time);
-	input.normal.y = abs(cos(input.position.x + time));
+	//input.normal.x = 1 - cos(input.position.x + time);
+	//input.normal.y = abs(cos(input.position.x + time));
+
+
+	// HEIGHT MAPPING
+	float min = 0;
+	float max = 10;
+
+	input.position.y = texture0.SampleLevel(sampler0, input.tex, 0).y * ((amplitude * max)) + min;
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
 	output.position = mul(input.position, worldMatrix);

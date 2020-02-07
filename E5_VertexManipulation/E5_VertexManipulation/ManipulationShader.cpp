@@ -37,10 +37,10 @@ ManipulationShader::~ManipulationShader()
 	}
 
 	// Release the time constant buffer.
-	if (timeBuffer)
+	if (waveBuffer)
 	{
-		timeBuffer->Release();
-		timeBuffer = 0;
+		waveBuffer->Release();
+		waveBuffer = 0;
 	}
 
 
@@ -53,7 +53,7 @@ void ManipulationShader::initShader(const wchar_t* vsFilename, const wchar_t* ps
 	D3D11_BUFFER_DESC matrixBufferDesc;
 	D3D11_SAMPLER_DESC samplerDesc;
 	D3D11_BUFFER_DESC lightBufferDesc;
-	D3D11_BUFFER_DESC timeBufferDesc;
+	D3D11_BUFFER_DESC waveBufferDesc;
 
 	// Load (+ compile) shader files
 	loadVertexShader(vsFilename);
@@ -92,17 +92,17 @@ void ManipulationShader::initShader(const wchar_t* vsFilename, const wchar_t* ps
 	renderer->CreateBuffer(&lightBufferDesc, NULL, &lightBuffer);
 
 	// Setup time buffer
-	timeBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	timeBufferDesc.ByteWidth = sizeof(TimeBufferType);
-	timeBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	timeBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	timeBufferDesc.MiscFlags = 0;
-	timeBufferDesc.StructureByteStride = 0;
-	renderer->CreateBuffer(&timeBufferDesc, NULL, &timeBuffer);
+	waveBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	waveBufferDesc.ByteWidth = sizeof(WaveBufferType);
+	waveBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	waveBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	waveBufferDesc.MiscFlags = 0;
+	waveBufferDesc.StructureByteStride = 0;
+	renderer->CreateBuffer(&waveBufferDesc, NULL, &waveBuffer);
 }
 
 
-void ManipulationShader::setShaderParameters(ID3D11DeviceContext* deviceContext, const XMMATRIX &worldMatrix, const XMMATRIX &viewMatrix, const XMMATRIX &projectionMatrix, ID3D11ShaderResourceView* texture, Light* light, const float &timePassed)
+void ManipulationShader::setShaderParameters(ID3D11DeviceContext* deviceContext, const XMMATRIX &worldMatrix, const XMMATRIX &viewMatrix, const XMMATRIX &projectionMatrix, ID3D11ShaderResourceView* texture, Light* light, const float &timePassed, const float &amplitude, const float &frequency, const float &speed)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -138,12 +138,17 @@ void ManipulationShader::setShaderParameters(ID3D11DeviceContext* deviceContext,
 	deviceContext->PSSetSamplers(0, 1, &sampleState);
 
 	// Send time data to vertex shader
-	TimeBufferType* timePtr;
-	deviceContext->Map(timeBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	timePtr = (TimeBufferType*)mappedResource.pData;
-	//timePtr->time = timer->getTime();
-	timePtr->time = timePassed;
-	timePtr->padding = { 0.0f, 0.0f, 0.0f };
-	deviceContext->Unmap(timeBuffer, 0);
-	deviceContext->VSSetConstantBuffers(1, 1, &timeBuffer);
+	WaveBufferType* wavePtr;
+	deviceContext->Map(waveBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	wavePtr = (WaveBufferType*)mappedResource.pData;
+	wavePtr->time = timePassed;
+	wavePtr->ampltiude = amplitude;
+	wavePtr->frequency = frequency;
+	wavePtr->speed = speed;
+	deviceContext->Unmap(waveBuffer, 0);
+	deviceContext->VSSetConstantBuffers(1, 1, &waveBuffer);
+
+	// Send texture and sampler to vertex shader
+	deviceContext->VSSetShaderResources(0, 1, &texture);
+	deviceContext->VSSetSamplers(0, 1, &sampleState);
 }
