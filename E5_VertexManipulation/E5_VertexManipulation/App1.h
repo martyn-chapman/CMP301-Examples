@@ -25,6 +25,7 @@ private:
 	ManipulationShader* shader;
 	PlaneMesh* mesh;
 	Light* light;
+	float timePassed;
 };
 
 #endif

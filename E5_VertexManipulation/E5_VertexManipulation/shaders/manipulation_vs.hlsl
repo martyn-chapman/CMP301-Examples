@@ -7,6 +7,12 @@ cbuffer MatrixBuffer : register(b0)
 	matrix projectionMatrix;
 };
 
+cbuffer TimeBuffer : register(b1)
+{
+	float time;
+	float3 padding;
+}
+
 struct InputType
 {
 	float4 position : POSITION;
@@ -24,6 +30,13 @@ struct OutputType
 OutputType main(InputType input)
 {
 	OutputType output;
+
+	// offset y
+	input.position.y = sin(input.position.x + time) * 0.5f;
+
+	// normals
+	input.normal.x = 1 - cos(input.position.x + time);
+	input.normal.y = abs(cos(input.position.x + time));
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
 	output.position = mul(input.position, worldMatrix);

@@ -21,7 +21,7 @@ void App1::init(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeigh
 	light = new Light;
 	light->setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
 	light->setDirection(0.7f, -0.7f, 0.0f);
-
+	timePassed = 0.0f;
 }
 
 
@@ -62,6 +62,11 @@ bool App1::frame()
 		return false;
 	}
 
+	if (timePassed < XM_2PI)
+		timePassed += timer->getTime();
+	else
+		timePassed = 0.0f;
+
 	return true;
 }
 
@@ -80,9 +85,11 @@ bool App1::render()
 	viewMatrix = camera->getViewMatrix();
 	projectionMatrix = renderer->getProjectionMatrix();
 
+	// Translate the world matrix to move the mesh
+	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
 	// Send geometry data, set shader parameters, render object with shader
 	mesh->sendData(renderer->getDeviceContext());
-	shader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"), light);
+	shader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"), light, timePassed);
 	shader->render(renderer->getDeviceContext(), mesh->getIndexCount());
 
 	// Render GUI
@@ -104,6 +111,7 @@ void App1::gui()
 	// Build UI
 	ImGui::Text("FPS: %.2f", timer->getFPS());
 	ImGui::Checkbox("Wireframe mode", &wireframeToggle);
+	ImGui::Text("Time passed: %.2f", timePassed);
 
 	// Render UI
 	ImGui::Render();
