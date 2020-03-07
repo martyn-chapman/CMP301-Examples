@@ -24,7 +24,9 @@ void App1::init(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeigh
 	light->setDiffuseColour(1.0f, 0.9f, 0.85f, 1.0f);
 	light->setAmbientColour(0.2f, 0.0f, 0.0f, 1.0f);
 	light->setPosition(50, 10, 50);
-	//light->setDirection(1.0f, -1.0f, 0.0f);
+	light->setSpecularColour(1.0f, 1.0f, 1.0f, 1.0f);
+	light->setSpecularPower(100.0f);
+	light->setDirection(1.0f, 0.0f, 0.0f);
 }
 
 
@@ -90,14 +92,14 @@ bool App1::render()
 
 	// Send geometry data, set shader parameters, render object with shader
 	mesh->sendData(renderer->getDeviceContext());
-	shader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"), light);
+	shader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"), light, camera->getPosition());
 	shader->render(renderer->getDeviceContext(), mesh->getIndexCount());
 
 	// Translate the world matrix to move the mesh
 	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
 	// Send geometry data, set shader parameters, render object with shader
 	planeMesh->sendData(renderer->getDeviceContext());
-	shader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"check"), light);
+	shader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"check"), light, camera->getPosition());
 	shader->render(renderer->getDeviceContext(), planeMesh->getIndexCount());
 
 

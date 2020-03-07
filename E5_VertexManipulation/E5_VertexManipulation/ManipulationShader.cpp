@@ -142,7 +142,7 @@ void ManipulationShader::setShaderParameters(ID3D11DeviceContext* deviceContext,
 	deviceContext->Map(waveBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	wavePtr = (WaveBufferType*)mappedResource.pData;
 	wavePtr->time = timePassed;
-	wavePtr->ampltiude = amplitude;
+	wavePtr->amplitude = amplitude;
 	wavePtr->frequency = frequency;
 	wavePtr->speed = speed;
 	deviceContext->Unmap(waveBuffer, 0);

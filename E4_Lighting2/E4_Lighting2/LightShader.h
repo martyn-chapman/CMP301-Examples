@@ -13,7 +13,11 @@ private:
 		XMFLOAT4 ambient;
 		XMFLOAT4 diffuse;
 		XMFLOAT3 position;
+		float attenuationConstant;
+		float attenuationLinear;
+		float attenuationQuadratic;
 		float padding;
+		float padding2;
 	};
 
 public:

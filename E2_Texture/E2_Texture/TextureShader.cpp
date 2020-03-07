@@ -174,38 +174,38 @@ void TextureShader::loadBlendedPixelShader(const wchar_t* filename)
 {
 	ID3DBlob* pixelShaderBuffer;
 
-	// check file extension for correct loading function.
-	std::wstring fn(filename);
-	std::string::size_type idx;
-	std::wstring extension;
+	//// check file extension for correct loading function.
+	//std::wstring fn(filename);
+	//std::string::size_type idx;
+	//std::wstring extension;
 
-	idx = fn.rfind('.');
+	//idx = fn.rfind('.');
 
-	if (idx != std::string::npos)
-	{
-		extension = fn.substr(idx + 1);
-	}
-	else
-	{
-		// No extension found
-		MessageBox(hwnd, L"Error finding pixel shader file", L"ERROR", MB_OK);
-		exit(0);
-	}
+	//if (idx != std::string::npos)
+	//{
+	//	extension = fn.substr(idx + 1);
+	//}
+	//else
+	//{
+	//	// No extension found
+	//	MessageBox(hwnd, L"Error finding pixel shader file", L"ERROR", MB_OK);
+	//	exit(0);
+	//}
 
-	// Load the texture in.
-	if (extension != L"cso")
-	{
-		MessageBox(hwnd, L"Incorrect pixel shader file type", L"ERROR", MB_OK);
-		exit(0);
-	}
+	//// Load the texture in.
+	//if (extension != L"cso")
+	//{
+	//	MessageBox(hwnd, L"Incorrect pixel shader file type", L"ERROR", MB_OK);
+	//	exit(0);
+	//}
 
-	// Reads compiled shader into buffer (bytecode).
-	HRESULT result = D3DReadFileToBlob(filename, &pixelShaderBuffer);
-	if (result != S_OK)
-	{
-		MessageBox(NULL, filename, L"File not found", MB_OK);
-		exit(0);
-	}
+	//// Reads compiled shader into buffer (bytecode).
+	//HRESULT result = D3DReadFileToBlob(filename, &pixelShaderBuffer);
+	//if (result != S_OK)
+	//{
+	//	MessageBox(NULL, filename, L"File not found", MB_OK);
+	//	exit(0);
+	//}
 	// Create the pixel shader from the buffer.
 	renderer->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &blendedPixelShader);
 

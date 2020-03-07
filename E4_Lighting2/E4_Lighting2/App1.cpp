@@ -20,6 +20,7 @@ void App1::init(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeigh
 	light = new Light;
 	light->setAmbientColour(0.0f, 0.0f, 0.0f, 1.0f);
 	light->setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
+	//light->setDiffuseColour(0.2f, 0.2f, 0.2f, 0.2f);
 	light->setPosition(50.0f, 10.0f, 50.0f);
 
 }
@@ -80,6 +81,7 @@ bool App1::render()
 	viewMatrix = camera->getViewMatrix();
 	projectionMatrix = renderer->getProjectionMatrix();
 
+	worldMatrix = XMMatrixTranslation(0.0f, -20.0f, 0.0f);
 	// Send geometry data, set shader parameters, render object with shader
 	mesh->sendData(renderer->getDeviceContext());
 	shader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"), light);
@@ -104,7 +106,16 @@ void App1::gui()
 	// Build UI
 	ImGui::Text("FPS: %.2f", timer->getFPS());
 	ImGui::Checkbox("Wireframe mode", &wireframeToggle);
-	ImGui::Text("Press E to raise camera \nto see the plane being rendered");
+	
+	// Control light position
+	float translation[3] = { light->getPosition().x, light->getPosition().y, light->getPosition().z };
+	ImGui::SliderFloat3("Point light pos", translation, 0.0f, 100.0f);
+	light->setPosition(translation[0], translation[1], translation[2]);
+
+	// Control light colour
+	float colour[4] = { light->getDiffuseColour().x, light->getDiffuseColour().y, light->getDiffuseColour().z, light->getDiffuseColour().w };
+	ImGui::ColorEdit3("Point light colour", colour);
+	light->setDiffuseColour(colour[0], colour[1], colour[2], colour[3]);
 
 	// Render UI
 	ImGui::Render();
